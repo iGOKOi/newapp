@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GK SOUND - Telegram Mini App</title>
+    <style>
+        body {
+            background-color: #121212; /* Темная тема */
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #333;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .track-title {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        .track-info {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .track-info a {
+            color: #1e90ff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>GK SOUND</h1>
+    <div class="track-title">Трек: Не выбран</div>
+    <div class="track-info">
+        <span>Текущий трек:</span>
+        <span class="track-name">Не выбран</span>
+    </div>
+
+    <div class="buttons">
+        <button class="button prev">Предыдущий</button>
+        <button class="button play-pause">▶️ Воспроизвести</button>
+        <button class="button next">Следующий</button>
+    </div>
+
+    <div class="track-info">
+        <a href="https://t.me/your_bot_link" target="_blank">Перейти в Telegram Bot</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const playPauseBtn = document.querySelector('.play-pause');
+            const prevBtn = document.querySelector('.prev');
+            const nextBtn = document.querySelector('.next');
+            const trackTitle = document.querySelector('.track-title'); // Для отображения названия текущего трека
+            const trackName = document.querySelector('.track-name');
+
+            // Список треков с названиями и ссылками на Google Drive
+            const tracks = [
+                {
+                    title: "Secret",
+                    url: "https://drive.google.com/uc?export=download&id=1ObuD1e6A0qY2zEIultjZGg9wzt4IEfR7"
+                },
+                {
+                    title: "Where",
+                    url: "https://drive.google.com/uc?export=download&id=1n9NIV84toNI4ebonDkmYVxu4cGRGARwg"
+                },
+                {
+                    title: "Pret",
+                    url: "https://drive.google.com/uc?export=download&id=1susDjUeEoBbRnkObRhd6Z6OiH2tp-wff"
+                },
+                {
+                    title: "Money",
+                    url: "https://drive.google.com/uc?export=download&id=1KYfjccNgyLCRP9yCa5Z4ULuKbmIeEK8H"
+                },
+                {
+                    title: "Dise",
+                    url: "https://drive.google.com/uc?export=download&id=19aMohL6cEXm7O6wF3U_D5fTXokEQP9eX"
+                }
+            ];
+
+            let currentTrackIndex = 0; // Индекс текущего трека
+            let audio = new Audio(tracks[currentTrackIndex].url); // Изначально загружается первый трек
+            trackTitle.textContent = tracks[currentTrackIndex].title; // Показываем название текущего трека
+            trackName.textContent = tracks[currentTrackIndex].title;
+
+            let isPlaying = false;
+
+            // Простейшая логика для воспроизведения/паузи
+            playPauseBtn.addEventListener('click', function () {
+                if (isPlaying) {
+                    audio.pause();
+                    playPauseBtn.textContent = '▶️ Воспроизвести';
+                } else {
+                    audio.play();
+                    playPauseBtn.textContent = '⏸️ Пауза';
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // Логика для следующего трека
+            nextBtn.addEventListener('click', function () {
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length; // Переход к следующему треку
+                audio.src = tracks[currentTrackIndex].url; // Обновляем источник
+                trackTitle.textContent = tracks[currentTrackIndex].title; // Обновляем название
+                trackName.textContent = tracks[currentTrackIndex].title; // Обновляем название на экране
+                audio.play();
+                playPauseBtn.textContent = '⏸️ Пауза'; // Устанавливаем кнопку в состояние "Пауза"
+                isPlaying = true;
+            });
+
+            // Логика для предыдущего трека
+            prevBtn.addEventListener('click', function () {
+                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length; // Переход к предыдущему треку
+                audio.src = tracks[currentTrackIndex].url; // Обновляем источник
+                trackTitle.textContent = tracks[currentTrackIndex].title; // Обновляем название
+                trackName.textContent = tracks[currentTrackIndex].title;
+                audio.play();
+                playPauseBtn.textContent = '⏸️ Пауза';
+                isPlaying = true;
+            });
+        });
+    </script>
+
+</body>
+</html>
