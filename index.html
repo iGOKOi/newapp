@@ -43,6 +43,12 @@
         .track-info a {
             color: #1e90ff;
         }
+
+        .soundcloud-embed {
+            width: 100%;
+            height: 166px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +70,15 @@
         <a href="https://t.me/your_bot_link" target="_blank">Перейти в Telegram Bot</a>
     </div>
 
+    <!-- Встроенный плеер SoundCloud -->
+    <div id="soundcloud-player" class="soundcloud-embed">
+        <iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" 
+                src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/161925798&color=%231e90ff&inverse=true&auto_play=false&show_user=true">
+        </iframe>
+    </div>
+
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const playPauseBtn = document.querySelector('.play-pause');
@@ -76,24 +91,27 @@
             const tracks = [
                 {
                     title: "Like Disease",
-                    url: "https://soundcloud.com/goko-161925798/like-disease?si=7ec71fa3881e4766a95927b5a005b251&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+                    url: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/161925798&color=%231e90ff&inverse=true&auto_play=false&show_user=true"
                 }
             ];
 
             let currentTrackIndex = 0; // Индекс текущего трека
-            let audio = new Audio(tracks[currentTrackIndex].url); // Изначально загружается первый трек
             trackTitle.textContent = tracks[currentTrackIndex].title; // Показываем название текущего трека
             trackName.textContent = tracks[currentTrackIndex].title;
 
             let isPlaying = false;
 
+            // Инициализируем плеер SoundCloud
+            const iframe = document.getElementById('sc-player');
+            const player = SC.Widget(iframe);
+
             // Простейшая логика для воспроизведения/паузи
             playPauseBtn.addEventListener('click', function () {
                 if (isPlaying) {
-                    audio.pause();
+                    player.pause();
                     playPauseBtn.textContent = '▶️ Воспроизвести';
                 } else {
-                    audio.play();
+                    player.play();
                     playPauseBtn.textContent = '⏸️ Пауза';
                 }
                 isPlaying = !isPlaying;
@@ -102,10 +120,9 @@
             // Логика для следующего трека
             nextBtn.addEventListener('click', function () {
                 currentTrackIndex = (currentTrackIndex + 1) % tracks.length; // Переход к следующему треку
-                audio.src = tracks[currentTrackIndex].url; // Обновляем источник
+                player.load(tracks[currentTrackIndex].url, { auto_play: true });
                 trackTitle.textContent = tracks[currentTrackIndex].title; // Обновляем название
-                trackName.textContent = tracks[currentTrackIndex].title; // Обновляем название на экране
-                audio.play();
+                trackName.textContent = tracks[currentTrackIndex].title;
                 playPauseBtn.textContent = '⏸️ Пауза'; // Устанавливаем кнопку в состояние "Пауза"
                 isPlaying = true;
             });
@@ -113,10 +130,9 @@
             // Логика для предыдущего трека
             prevBtn.addEventListener('click', function () {
                 currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length; // Переход к предыдущему треку
-                audio.src = tracks[currentTrackIndex].url; // Обновляем источник
+                player.load(tracks[currentTrackIndex].url, { auto_play: true });
                 trackTitle.textContent = tracks[currentTrackIndex].title; // Обновляем название
                 trackName.textContent = tracks[currentTrackIndex].title;
-                audio.play();
                 playPauseBtn.textContent = '⏸️ Пауза';
                 isPlaying = true;
             });
